@@ -9,15 +9,16 @@ int comparator(const void* str1,const void* str2){
 void peek(char* str,char* prevdir,char* homedir){
     char* newstr=(char*)malloc(sizeof(char)*1024);
     strcpy(newstr,str);
+    // to bypass peek
     newstr+=4;
-    int lf=0;
-    int af=0;
-    char* token=strtok(newstr," \t");
+    bool lf=0;
+    bool af=0;
+    // to store the path of the directory whose info is to be printed
     char* path=NULL;
+    char* token=strtok(newstr," \t");
     while(token!=NULL){
-        // printf("here ");
+
         if(token[0]=='-'){
-            // printf("this ");
             if(strlen(token)==3 && (strcmp(token,"-al")==0 || strcmp(token,"-la")==0)){
                 af=lf=1;
             }
@@ -33,9 +34,6 @@ void peek(char* str,char* prevdir,char* homedir){
                 path=token;
             }
         }
-        else if(token[0]=='~'){
-            path=token;
-        }
         else{
             path=token;   
         }
@@ -44,62 +42,79 @@ void peek(char* str,char* prevdir,char* homedir){
     if(path==NULL){
         path=".";
     }
+
+    // to restore it back to the original directory later
     char pwd[1024];
     getcwd(pwd,sizeof(pwd));
-    if(path[0]=='-'){
-        chdir(prevdir);
-    }
-    else if(path[0]=='~'){
-        chdir(homedir);
-    }
-    if(strlen(path)>2){
-        path+=2;
-        int validity=chdir(path);
-        //  warp(path,prevdir,homedir);
-        if(validity!=0){
-            printf("Invalid Input !!\n");
-            return;
+
+    // code similar to warp to change the directory
+    token=strtok(path," \t/");
+    while(token!=NULL){
+        if(token[0]=='-'){
+            chdir(prevdir);
+            char pwd[1024];
+            getcwd(pwd,sizeof(pwd));
         }
+        else if(token[0]=='~'){
+            chdir(homedir);
+            char pwd[1024];
+            getcwd(pwd,sizeof(pwd));
+        }
+        else{
+            // multiple / seperated arguments given
+            
+            int val=chdir(token);
+            if(val!=0){
+                printf("Invalid Input !!\n");return;
+            }
+            if(val==0){
+                char pwd[1024];
+                getcwd(pwd,sizeof(pwd));
+            }
+        }
+        token=strtok(NULL," \t/");
     }
+
+    // . because we want to open the current directory
     char* temp=(char*)malloc(sizeof(char)*2);
     temp[0]='.';temp[1]='\0';
+
     DIR* directory=opendir(temp);
     if(directory==NULL){
         printf("Invalid Inputs !\n");return;
     }
+    
     struct dirent* ptr=readdir(directory);
+
+    // names store the names of the files in the directory
     char* names[1024];
     int num=0;
 
     while(ptr!=NULL){
-        // printf("here");
-        //  if (strcmp(ptr->d_name, ".") != 0 && strcmp(ptr->d_name, "..") != 0) {
-        //     char full_path[1024];
-        //     snprintf(full_path, sizeof(full_path), "%s/%s", path, ptr->d_name);
-
+    
         struct stat info;
         int val=stat(ptr->d_name,&info);
         if(val==0){
             if((ptr->d_name)[0]=='.'){
+                // this means this is a hidden file hence,if flag is 1 then only we will print it
                 if(af==1){
                     names[num++]=ptr->d_name;
                 }
             }
             else{
                 names[num++]=ptr->d_name;
-                // printf("read %s ",ptr->d_name);
             } 
-        // }
         }
         ptr=readdir(directory);
     }
+
     qsort(names,num,sizeof(const char*),comparator);
-    for (int i = 0; i < num; i++)
-    {
-        // printf("yo");
+    
+    for (int i = 0; i < num; i++){
         struct stat info;
         int val=stat(names[i],&info);
         if(val==0){
+            // display all the information if lf is set
             if(lf==1){
                 if(S_ISDIR(info.st_mode)){
                     printf("d");
@@ -167,9 +182,11 @@ void peek(char* str,char* prevdir,char* homedir){
                 if(info.st_mode&S_IXOTH){
                     count++;
                 }
+                // print in blue if it is a directory
                 if(S_ISDIR(info.st_mode)){
                     printf(ANSI_COLOR_BLUE "%s\n" ANSI_COLOR_RESET,names[i]);
                 }
+                // print in green if it an executable
                 else if(count==3){
                     printf(ANSI_COLOR_GREEN "%s\n" ANSI_COLOR_RESET,names[i]);
                 }
@@ -183,9 +200,7 @@ void peek(char* str,char* prevdir,char* homedir){
     // printf("\n%s\n",path);
     // printf("store is %s\n ",storeddir);
     chdir(pwd);
-    // char pwdvali[1024];
-    // getcwd(pwdvali,sizeof(pwdvali));
-    // printf(" %s ",pwdvali);
+
 }
 
 

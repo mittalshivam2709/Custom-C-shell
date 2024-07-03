@@ -2,85 +2,109 @@
 
 ## About
 
-This is an implementation of a Linux Bash like shell in C language.
+This is an implementation of an interactive user defined bash like shell in C language.
 
 ## Run the shell
 
-1. Execute the following in the directory that contains the source files:
+- Execute the following in the directory Custom-C-shell that contains the source files:
    
-   $ make
-   $ ./a.out
+  - make
+  - ./a.out
    
 
-## Display
+##  Input Requirements Satisfied by the shell
 
-### ; seperated commands
+- The shell supports a ‘;’ or ‘&’ separated list of commands. '; command can be used to give multiple commands at the same time. ‘&’ operator runs the command preceding it in the background after printing the process id of the newly created process.
 
-- Concatenate multiple commands in a single line by separating them with a semicolon ;
-
+- It also accounts for random spaces and tabs when taking input.
+- If any command is erroneous 'Invalid Input !!' is printed.
 ---
 
-### & terminated background processes
+## Organisation of Source Files
 
-- Run processes in background by appending an ampersand & at the end of the command
-- *Terminal* displays the pid of such processes before executing them in the background
-- *Child handling: **Terminal* displays the exit status of such processes when they are terminated, suspended or continued.
-
----
-
-- On executing the code, a shell prompt of the following form appears along with it.
-  <Username@system_name:curr_dir>
-  where curr_dir from which the shell is being invoked is represented by a '~'.
-
-## Source Files Organisation
-
-- Modular
+- Modularity is ensured for easy analysis and modifications in future.
 - The commands are implemented in separate .c files.
 - The shell is called from the main function in [main.c](main.c).
-- Common header files are included, functions and global variables are declared in the [headers.h](headers.h) file.
+- Common header files are included in [headers.h](headers.h) file along with the declaration of functions and global variables.
 
 ## Supported commands
 
-### Built-in commands
+### System commands
 
-- Builtin commands are contained within the shell itself. When the name of a builtin command is used as the
-  first word of a simple command, the shell executes the command directly without invoking another program.
-- Builtin commands are necessary to implement functionality impossible or inconvenient to obtain with separate utilities.
-- Built-in commands have been defined and implemented.
+- System commands such as sleep,vim,echo,gedit,emacs are very well executed upon giving input. They are not implemented seperately and execvp has been used to get the desired results.
+
+### Custom Commands
 
 ### 1. warp- Changes the current working directory
 
+- ‘warp’ command changes the directory that the shell is currently in. It also prints the full path of working directory after changing. The directory path/name can be provided as argument to this command.
 
-$ warp [DIR]
-$ warp ..
-$ warp -
-$ warp ~
+- '~' changes directory to the home directory i.e. the directory from which the shell was executed
+- '-' changes directory to the previous working directory.
+- Any relative path from the home directory is valid.
+- Any absolute path (i.e. from the root directory) is valid.
+- Passing no arguments changes directory to the home directory.
+- Note that these are valid as long as the user has the appropriate permissions for the directory passed.
 
 
-- Here, [DIR] can take on any of the following values
-  - ~ Changes directory to the home directory i.e. the directory from which the shell was executed
-  - - Changes directory to the previous working directory
-  - Any relative path from the home directory is valid
-  - Any absolute path (i.e. from the root directory) is valid
-  - Passing no arguments changes directory to the home directory
-  - Note that these are valid as long as the user has the appropriate permissions for the directory passed
+```bash
+<JohnDoe@SYS:~> warp test
+/home/johndoe/test
+
+<JohnDoe@SYS:~/test> warp assignment
+/home/johndoe/test/assignment
+
+<JohnDoe@SYS:~/test/assignment> warp ~
+/home/johndoe
+
+<JohnDoe@SYS:~> warp -
+/home/johndoe/test/assignment
+
+<JohnDoe@SYS:~/test/assignment> warp .. tutorial
+/home/johndoe/test
+/home/johndoe/test/tutorial
+
+<JohnDoe@SYS:~/test/tutorial> warp ~/project
+/home/johndoe/project
+
+<JohnDoe@SYS:~/project> 
+
+```
+
+When a path command is given which contains travelling through multiple directories, the directory changes are done sequentially, hence if an invalid path is found in between, the current directory is changed till last valid directory input.
 
 ---
 
 ### 2. peek - List files/folders and their information from one or multiple directories
 
+- ‘peek’ command lists all the files and directories in the specified directories in lexicographic order (default peek does not show hidden files). It supports the -a and -l flags as well.
 
-$ peek [OPTIONS]... [FILE]...`
+- -l : displays extra information
+- -a : displays all files, including hidden files
 
+- Similar to warp, it supports “.”, “..”, “~”, and “-” symbols.
 
-- Here, [OPTIONS] can take any of the following values
-  - Specifying no options prints only the names of the non-hidden files/folders from the FILEs passed
-  - -a (all) Behaves similar to no options but additionally prints hidden files
-  - -l (long format) Prints additional info such as permissions, date modified, size for each non-hidden file
-  - Note that multiple options can be used at the same time
-- The [FILE] argument can be
-  - A relative or absolute path to a file or a folder
-  - Note that the user is required to have appropriate permissions to read the details/contents of the file/folder
+- It supports both relative and absolute paths.
+- If no argument is given, it peeks at the current working directory.
+
+The input is always be in the following format :
+
+```bash
+peek <flags> <path/name>
+```
+The following cases are also handled in case of flags :
+```bash
+peek -a <path/name>
+peek -l <path/name>
+peek -a -l <path/name>
+peek -l -a <path/name>
+peek -la <path/name>
+peek -al <path/name>
+```
+- Note that the user is required to have appropriate permissions to read the details/contents of the file/folder
+
+It is assumed that the paths given are not space seperated.
+it is assumed Multiple arguments will not be given as input.
 
 ---
 

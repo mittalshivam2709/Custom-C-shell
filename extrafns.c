@@ -67,7 +67,7 @@ int removespacesandtabs(char** comds,int num){
 void combinedexecute(char* str,int bg,struct allprocesses* procarr,int* numprocess,struct allprocesses* procarract,int* numprocessact,char* prevdir,char* homedir){
         if (strstr(str,"warp")){               
             warp(str,prevdir,homedir);
-        }   
+        }
         else if(strlen(str)>=4&&strstr(str,"peek")){
             peek(str,prevdir,homedir);
         }    
