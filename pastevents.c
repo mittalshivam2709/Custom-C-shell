@@ -245,6 +245,7 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
 
                 // cmds has val num of commands
                 // now remove spaces and tabs from each of the commands
+                
                 removespacesandtabs(comds, val);
 
                 // now in comds[i] which has size=val we have the actual command that needs to be executed

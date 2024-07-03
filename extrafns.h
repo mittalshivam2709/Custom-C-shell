@@ -5,7 +5,7 @@
 int numofcommands(char* str);
 void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numprocess,struct allprocesses* procarract,int* numprocessact);
 char** seperateands(char* str);
-void removespacesandtabs(char** comds,int num);
+int removespacesandtabs(char** comds,int num);
 void combinedexecute(char* str,int bg,struct allprocesses* procarr,int* numprocess,struct allprocesses* procarract,int* numprocessact,char* prevdir,char* homedir);
 
 #endif

@@ -28,8 +28,9 @@ char** seperateands(char* str){
     return retcommands;
 }
 
-void removespacesandtabs(char** comds,int num){
-    for (int cn = 0; cn < num; cn++) // cn is comm no.
+int removespacesandtabs(char** comds,int num){
+    int isexit=-1;
+    for (int cn = 0; cn < num; cn++) // cn is command no.
     {
         int val=strlen(comds[cn]);
         int i=0;
@@ -48,8 +49,12 @@ void removespacesandtabs(char** comds,int num){
             }
             finalstr[j-i+1]='\0';
             comds[cn]=finalstr;
+            if(strcmp(finalstr,"exit")==0){
+                isexit=cn;
+            }
         }   
     }    
+    return isexit;
 }
 
 // a & b& c& d
@@ -67,11 +72,9 @@ void combinedexecute(char* str,int bg,struct allprocesses* procarr,int* numproce
             peek(str,prevdir,homedir);
         }    
         else if(strlen(str)>=4&&strstr(str,"seek")){
-            
             seek(str,prevdir,homedir);
         }
-        else if(strstr(str,"pastevents")!=NULL)
-        {
+        else if(strstr(str,"pastevents")!=NULL){
             // printf("inside this");
             executepastevents(str,homedir,prevdir,procarr,numprocess,procarract,numprocessact);
         }
@@ -94,8 +97,7 @@ void combinedexecute(char* str,int bg,struct allprocesses* procarr,int* numproce
         else if(strstr(str,"neonate")){
             neonate(str);
         }
-                // }
-                // if not then execute the process using execvp but send fla of being background as 0
+        // if not then execute the process using execvp but send flag of being background as 0
         else{
             executeprocess(str,bg,procarr,numprocess,procarract,numprocessact);
             // executeprocess(str,0,procarr,&numprocess,procarract,&numprocessact);
