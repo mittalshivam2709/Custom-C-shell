@@ -27,5 +27,6 @@ void Print(Queue head);
 void PrintReverse(Queue head);
 char* findElem(Queue head, int pos);
 void removeKElems(Queue head, int k);
+void popatpos(Queue head,int pos);
 
 #endif

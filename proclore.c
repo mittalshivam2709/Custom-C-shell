@@ -28,17 +28,15 @@ void proclore(char* str){
     char* arr[1000];
     if(strlen(str)==8){
         int currid=getpid();
-        // printf("%d\n",currid);
         arr[0]=converttostring(currid);
-        // printf("\n%s\n",arr[0]);
         val=1;
     }
     else{
-        char* token=strtok(str," ");
-        token=strtok(NULL," ");
+        char* token=strtok(str," \t");
+        token=strtok(NULL," \t");
         while (token!=NULL){
             arr[val++]=token;
-            token=strtok(NULL," ");
+            token=strtok(NULL," \t");
         }
     }
     for (int i = 0; i < val; i++){
@@ -105,7 +103,7 @@ void proclore(char* str){
         else {
             perror("readlink");
         }
-
+        
 
     }    
 }

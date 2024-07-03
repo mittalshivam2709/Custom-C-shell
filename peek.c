@@ -2,15 +2,17 @@
 
 
 int comparator(const void* str1,const void* str2){
-    return strcmp(*(const char** )str1,*(const char**)str2);
+    return strcmp(*(char** )str1,*(char**)str2);
 }
 
 // handle the case when invalid argument is given 
-void peek(char* str){
-    str+=4;
+void peek(char* str,char* prevdir,char* homedir){
+    char* newstr=(char*)malloc(sizeof(char)*1024);
+    strcpy(newstr,str);
+    newstr+=4;
     int lf=0;
     int af=0;
-    char* token=strtok(str," ");
+    char* token=strtok(newstr," \t");
     char* path=NULL;
     while(token!=NULL){
         // printf("here ");
@@ -27,19 +29,38 @@ void peek(char* str){
                     lf=1;
                 }
             }
+            else{
+                path=token;
+            }
         }
-        else{
+        else if(token[0]=='~'){
             path=token;
         }
-        token=strtok(NULL," ");
+        else{
+            path=token;   
+        }
+        token=strtok(NULL," \t");
     }    
-    
     if(path==NULL){
         path=".";
     }
     char pwd[1024];
     getcwd(pwd,sizeof(pwd));
-    chdir(path);
+    if(path[0]=='-'){
+        chdir(prevdir);
+    }
+    else if(path[0]=='~'){
+        chdir(homedir);
+    }
+    if(strlen(path)>2){
+        path+=2;
+        int validity=chdir(path);
+        //  warp(path,prevdir,homedir);
+        if(validity!=0){
+            printf("Invalid Input !!\n");
+            return;
+        }
+    }
     char* temp=(char*)malloc(sizeof(char)*2);
     temp[0]='.';temp[1]='\0';
     DIR* directory=opendir(temp);
@@ -66,7 +87,7 @@ void peek(char* str){
             }
             else{
                 names[num++]=ptr->d_name;
-                // printf("read %s ",ptr->d_name);;
+                // printf("read %s ",ptr->d_name);
             } 
         // }
         }
@@ -79,7 +100,6 @@ void peek(char* str){
         struct stat info;
         int val=stat(names[i],&info);
         if(val==0){
-
             if(lf==1){
                 if(S_ISDIR(info.st_mode)){
                     printf("d");

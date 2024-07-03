@@ -152,6 +152,43 @@ char* popRear(Queue head)
     }
 }
 
+void popatpos(Queue head,int pos){
+    if(head->numelems==1){
+        popRear(head);
+        return;
+    }
+    else if(head->numelems==2){
+        if(pos==1){
+            Popfront(head);
+        }
+        else{
+            head->front->next=head->front;
+            head->front->prev=head->front;
+            head->numelems--;
+        }
+    }
+    else{
+        if(pos==1){
+            Popfront(head);
+            return;
+        }
+        struct node *before ;
+        struct node *curr;
+
+        curr=head->front;
+        before=head->front;
+        while(pos!=1){
+            before=curr;
+            curr=curr->next;
+            pos--;
+        }
+        before->next=curr->next;
+        curr->next->prev=before;
+        head->numelems--;
+        return;
+    }
+
+}
 void Print(Queue head)
 {
     if (!IsEmpty(head))
@@ -163,33 +200,9 @@ void Print(Queue head)
             printf("%s ", ptr->val);
             ptr = ptr->next;
         } while (ptr != head->front);
-        printf("\n");
-    }
-
-    else
-    {
-        printf("-1");
-        printf("\n");
-    }
-}
-
-void PrintReverse(Queue head)
-{
-    if (!IsEmpty(head))
-    {
-        struct node *ptr;
-        ptr = head->rear;
-        do
-        {
-            printf("%s ", ptr->val);
-            ptr = ptr->prev;
-        } while (ptr != head->rear);
-        printf("\n");
     }
     else
     {
-        printf("-1");
-        printf("\n");
     }
 }
 
@@ -218,39 +231,3 @@ char* findElem(Queue head, int pos)
         return NULL;
     }
 }
-
-void removeKElems(Queue head, int k)
-{
-    if (!IsEmpty(head))
-    {
-        struct node *ptr;
-        struct node *store;
-        ptr = head->front;
-        if (k < head->numelems)
-        {
-            while (k != 0)
-            {
-                store = ptr->next;
-                ptr->next->prev = head->rear;
-                head->rear->next = ptr->next;
-                head->numelems--;
-                head->front = ptr->next;
-                ptr->next = NULL;
-                ptr->prev = NULL;
-                ptr = store;
-                k--;
-            }
-        }
-        else
-        {
-            head->numelems = 0;
-            head->front = NULL;
-            head->rear = NULL;
-        }
-    }
-    else
-    {
-        return;
-    }
-}
-

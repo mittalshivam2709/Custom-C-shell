@@ -2,19 +2,20 @@
 
 void warp(char* str,char* prevdir,char* homedir){
     // printf("here ");
-    //*************** ../fold then warp - vala case dekhna baaki hai !!!!!!!!
     // error message when chdir fails
-
-    str+=3;
-    if(str[1]=='\0'){
+    // str+=3;
+    char* newstr=(char*)malloc(sizeof(char)*1024);
+    strcpy(newstr,str);
+    newstr+=3;
+    if(newstr[1]=='\0'){
         chdir(homedir);
         char pwd[1024];
         getcwd(pwd,sizeof(pwd));
         printf("%s\n",pwd);
     }
     else{
-        str+=1;
-        char* token=strtok(str," /");
+        newstr+=1;
+        char* token=strtok(newstr," \t/");
         char temp[1024];
         while(token!=NULL){
             // printf("beg is %s ",prevdir);
@@ -41,7 +42,7 @@ void warp(char* str,char* prevdir,char* homedir){
                 int val=chdir(token);
                 // printf("%d\n",val);
                 if(val!=0){
-                    printf("Invalid Input !!\n");
+                    printf("Invalid Input !!\n");return;
                 }
                 if(val==0){
                 char pwd[1024];
@@ -49,7 +50,7 @@ void warp(char* str,char* prevdir,char* homedir){
                 printf("%s\n",pwd);
                 }
             }
-            token=strtok(NULL," /");
+            token=strtok(NULL," \t/");
             strcpy(prevdir,temp);
         }
     }

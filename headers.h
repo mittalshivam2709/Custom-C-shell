@@ -13,6 +13,22 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
+#include <signal.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <arpa/inet.h>
+#include <termios.h>
+
+extern int fgpid;
+extern int ctrlzflag;
+extern char path[1024];
+
+struct allprocesses
+{
+    char procid[100];
+    char procname[100];    
+    int flag;
+};
 
 
 #define ANSI_COLOR_RED     "\x1b[31m"
@@ -32,4 +48,12 @@
 #include "prompt.h"
 #include "pastevents.h"
 #include "extrafns.h"
+#include "ioredirection_pipe.h"
+#include "activities.h"
+#include "ping.h"
+#include "fgbg.h"
+#include "iman.h"
+#include "neonate.h"
+
+
 #endif

@@ -34,6 +34,9 @@ void prompt(int isfirst,char* homedir){
             if(strstr(pwd,homedir)){
                 temp+=strlen(homedir);
             }
+            if(strlen(temp)==0){
+                printf("~");
+            }
             printf("%s>",temp);    
         }
 // printf("\nlo aa agye prompt me \n");
