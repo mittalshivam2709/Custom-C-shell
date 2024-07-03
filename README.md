@@ -20,22 +20,46 @@ This is an implementation of an interactive user defined bash like shell in C la
 - If any command is erroneous 'Invalid Input !!' is printed.
 ---
 
-## Organisation of Source Files
-
-- Modularity is ensured for easy analysis and modifications in future.
-- The commands are implemented in separate .c files.
-- The shell is called from the main function in [main.c](main.c).
-- Common header files are included in [headers.h](headers.h) file along with the declaration of functions and global variables.
-
 ## Supported commands
 
 ### System commands
 
 - System commands such as sleep,vim,echo,gedit,emacs are very well executed upon giving input. They are not implemented seperately and execvp has been used to get the desired results.
 
+### Foreground and Background Processes 
+
+- A foreground process can be executed in the shell if '&' is not used after the command. The shell will wait for that process to complete and regain control afterwards. Control of terminal is handed over to this process for the time being while it is running.
+
+```bash
+<JohnDoe@SYS:~> sleep 5
+# sleeps for 5 seconds
+<JohnDoe@SYS:~ 
+```
+
+- Any command invoked with “&” is treated as a background command. The shell will spawn that process but doesn’t hand the control of terminal to it. Shell will keep taking other user commands.
+
+- Whenever a new background process is started, PID of the newly created background process is printed.
+
+- Multiple background processes can be run.
+
+- Process name along with pid is printed when background process ends. If the process ended normally or abnormally is also mentioned.
+
+
+```bash
+<JohnDoe@SYS:~> sleep 10 &
+13027
+<JohnDoe@SYS:~> sleep 20 &                       # After 10 seconds
+Sleep exited normally (13027)
+13054
+<JohnDoe@SYS:~> echo "Lorem Ipsum"               # After 20 seconds
+Sleep exited normally (13054)
+Lorem Ipsum
+
+```
+Background processes for custom commands are not handled.
 ### Custom Commands
 
-### 1. warp- Changes the current working directory
+### 1. warp command
 
 - ‘warp’ command changes the directory that the shell is currently in. It also prints the full path of working directory after changing. The directory path/name can be provided as argument to this command.
 
@@ -75,7 +99,7 @@ When a path command is given which contains travelling through multiple director
 
 ---
 
-### 2. peek - List files/folders and their information from one or multiple directories
+### 2. peek command
 
 - ‘peek’ command lists all the files and directories in the specified directories in lexicographic order (default peek does not show hidden files). It supports the -a and -l flags as well.
 
@@ -101,27 +125,68 @@ peek -l -a <path/name>
 peek -la <path/name>
 peek -al <path/name>
 ```
-- Note that the user is required to have appropriate permissions to read the details/contents of the file/folder
+Note that the user is required to have appropriate permissions to read the details/contents of the file/folder
 
 It is assumed that the paths given are not space seperated.
 it is assumed Multiple arguments will not be given as input.
 
 ---
 
-### 3. pastevents - Displays the previous 15 commands executed on the Terminal
+### 3. pastevents commands
+
+### pastevents
+‘pastevents’ command is similar to the actual history command in bash. The implementation stores (and output) the 15 most recent command statements given as input to the shell based on some constraints. The oldest commands are overwritten if more than the set number (15) of commands are entered. pastevents is persistent over different shell runs, i.e., the most recent command statements should be stored when the shell is exited and be retrieved later on when the shell is opened.
 
 
-$ pastevents
-$ pastevents execute [0<=index<=15]
-$ pastevents purge
+Note :
 
+- A command is not stored in pastevents if it is the exactly same as the previously entered command. 
+- All statements except commands that include pastevents or pastevents purge are stored.
 
-- Here, specifying only pastevents, will print previous 15 commands and are stored in *past.txt*
-- If the new command entered is same as *previous* command, then it will not be stored in past.txt
-- *pastevents purge* clears past.txt file
-- *pastevents execute* index will Execute the command at position in pastevents
+### pastevents purge
+
+Clears all the pastevents currently. This command in not stored in the pastevents.
+
+### pastevents execute <index>
+
+Executes the command at position in pastevents (ordered from most recent to oldest). 
+
+Note: If the new command entered is same as *previous* command, then it will not be stored.
+
+```bash
+<JohnDoe@SYS:~> peek test
+# output
+<JohnDoe@SYS:~> sleep 5
+# output
+<JohnDoe@SYS:~> sleep 5
+# output
+<JohnDoe@SYS:~/test> echo "Lorem ipsum"
+# output
+<JohnDoe@SYS:~> pastevents
+peek test
+sleep 5
+echo "Lorem ipsum"
+<JohnDoe@SYS:~> pastevents execute 1
+# output of echo "Lorem ipsum"
+<JohnDoe@SYS:~> pastevents
+peek test
+sleep 5
+echo "Lorem ipsum"
+<JohnDoe@SYS:~> pastevents execute 3
+# output of peek test
+<JohnDoe@SYS:~> pastevents
+peek test
+sleep 5
+echo "Lorem ipsum"
+peek test
+<JohnDoe@SYS:~> pastevents purge
+<JohnDoe@SYS:~> pastevents
+<JohnDoe@SYS:~>
+```
 
 ---
+
+
 
 ### 4. proclore - Prints the process related info of a shell program
 
@@ -277,6 +342,7 @@ $ finish
 - It will display a messese "Oh! You are out of your *ShellCraft* now!" in red colour.
 
 # Assumptions
+
 
 1. Assuming the input size will be maximum of *1000* bytes.
 2. In the pastevents command, if the command contains pastevents, then it wont be stored in history.txt, or else the corresponding command will be checked with the last command and if both of them are not same, then it will be stored in *history.txt* to ensure that 'unique consecutive commands' are only appended.

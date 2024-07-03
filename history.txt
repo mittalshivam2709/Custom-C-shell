@@ -1,105 +1,14 @@
-warp ..
-warp Custom-C-shell
-warp fold
-warp fikd
-warp fold
-clear
-warp -
-clear
-       exit    	 	
-       exit    
-    	 	  exit  	 	 	 	
-   	 	 exit   	 	
-   	 	 	 exit  	 	  		 
-sleep 10 & sleep 1   	 	 &   	 	 exit 	 	 &
-ls
-sleep 10      	 	 & 	 	  	sleep 2 		 & sleep 1 &
- 	 	 	sleep 20
- 	 	sleep 10 	 	& 	 sleep 2 	 & 	 sleep 2 &
-sleep 5 & sleep 10
- 	 	sleep 10 	 	&  	 sleep 6   & sleep 23 &
-[A[A[A    printf("commands [1] is %s\n",comds[1]);
- 	 	sleep 10 	 	& 	 	 sleep 6  	 	&	 	 sleep 2 	 	&
- 	 	 sleep 	 	 5 	 		 
-warp fold
-   	 	 warp   	 	
-clear
-warp fold
-warp 
-warp -
-warp fold
-warp 
-warp -
-warp fold/a/b
-warp .
-warp ..
-warp ../
-warp -
-warp 
-clear
-warp ..
-warp -
-warp ..
-warp ../.../
-warpwarp fold
-warp /home/shivam/Desktop/cshell/Custom-C-shell
-warp .. 
-warp 
-warp ..
-warp Custom-C-shell fold
-warp ..
-peek
-warp ../..
-warp -
-peek ../
-peek
-peek fold
-peek /fold
-peek ../
-warp ..
-peek ../
-peek ..
-peek ../
-
-peek -
-warp fold
-peek -
-warp ..
-peek -
-warp fold/a
-peek 
-warp ~
-warp -
-peek ~
-clear
-peek ..
-peek ../
-peek ..
-warp ../..
-peek ..
-peek ../
-peek ..
-peek /fold
-peek fold
-warp a
-warp fold
-warp a
-warp b
-warp -/fold
-warp ~/fold
-peek ..
-peek ../
-peek fold
-peek /fold
-peek fold a
-peek fold/a
-peek 
-peek -a
-peek -l
-peek -la
 peek 
 peek -a
 peek .
 peek -la 
 peek -l -a
 peek -a -l
+exit
+peek fold/a
+peek -a
+peek fold/a
+pasteventes exectue 35
+sleep 5
+sleep 5&
+sleep 5

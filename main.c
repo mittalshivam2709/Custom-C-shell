@@ -104,6 +104,10 @@ int main() {
             return 0;
         }
 
+
+        // this is to find the last line in history.txt which will be the last input given
+        // since if this is same as the current input, it must not be stored.
+
         fseek(fp, 0, SEEK_END); // pointer set to next to eof
         long long int file_size = ftell(fp);
         long long int pos = file_size;
@@ -120,6 +124,7 @@ int main() {
         fgets(line,sizeof(line),fp);
         fclose(fp);
         
+        // if input does not contains pastevents and is not same as the last input then store it in the history file
         if(strstr(input,pastevents)==NULL && strcmp(input,line)!=0){
 
             // write to the history file
@@ -141,11 +146,6 @@ int main() {
             commands[k]=token;
             k++;
             token=strtok(NULL,";");
-        }
-
-        if (strcmp(input, "exit") == 0) {
-            // printf("heelo");
-            break;
         }
 
         
@@ -238,7 +238,7 @@ int main() {
                 if(onlybg==0){ //a & b & c
                     forfor=val-1;
                 }
-                
+
                 for (int bp = 0; bp < forfor; bp++){
                     // executeprocess(comds[bp],1,procarr,&numprocess,procarract,&numprocessact); // execute background process with flag 1 of bg 
                     if(bp==exitidx){

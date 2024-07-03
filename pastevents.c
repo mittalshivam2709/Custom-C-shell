@@ -1,51 +1,35 @@
 #include "headers.h"
 
-void executepastevents(char *str, char *homedir, char *prevdir, struct allprocesses *procarr, int *numprocess, struct allprocesses *procarract, int *numprocessact)
-{
+void executepastevents(char *str, char *homedir, char *prevdir, struct allprocesses *procarr, int *numprocess, struct allprocesses *procarract, int *numprocessact){
     char pastevents[11] = "pastevents";
     Queue Q = NULL;
     Q = Init(Q);
-    // char cw[1024];
-    // getcwd(cw, sizeof(cw));
-    // strcat(cw, "/history.txt");
     FILE *fp = fopen(path, "r");
-    if (fp == NULL)
-    {
+    if (fp == NULL){
         perror("Error opening file");
         return;
     }
+    // extract last 15 commands
+
     long long int linenum = 0;
     fseek(fp, 0, SEEK_END); // pointer set to next to eof
     long long int file_size = ftell(fp);
     long long int pos = file_size;
     fseek(fp, 0, SEEK_SET);
-    // printf("here is %c\n",fgetc(fp));
-    char line[1024];
-    // printf("pos is %lld ",pos);
-    // Start from the end and find the last 15 lines
-    // printf("yo %lld %lldyo",linenum,pos);
-    while (linenum < 16 && pos >= 0)
-    {
-        // printf("padharo");
+
+    while (linenum < 16 && pos >= 0){
         fseek(fp, --pos, SEEK_SET);
-        if (fgetc(fp) == '\n')
-        {
+        if (fgetc(fp) == '\n'){
             linenum++;
         }
     }
-    if (linenum <= 15)
-    {
+    if (linenum <= 15){
         fseek(fp, 0, SEEK_SET);
     }
-    // char h=fgetc(fp);
-    // printf("h is %c\n",h);
-    // printf("%d",pos);
-    // printf(" %lld ",linenum);
+
+    char line[1024];
     int count = 0;
-    while (count < 16 && fgets(line, sizeof(line), fp) != NULL)
-    {
-        // printf(":innns");
-        // printf("%s", line);
+    while (count < 16 && fgets(line, sizeof(line), fp) != NULL){
         char *temp = malloc(sizeof(char) * (strlen(line) + 1));
         strcpy(temp, line);
         Pushback(Q, temp);
@@ -53,45 +37,34 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
     }
     fclose(fp);
 
-    if (strstr(str, "pastevents") != NULL && strstr(str, "purge"))
-    {
-        // empty the file also
+    if (strstr(str, "pastevents") && strstr(str, "purge")){
+        // empty the file 
         FILE *file = fopen(path, "w");
-        if (file == NULL)
-        {
+        if (file == NULL){
             perror("Error opening the history file");
         }
         fclose(file);
+        return;
     }
 
-    else if (strcmp(str, "pastevents") == 0)
-    {
-        Print(Q);
+    else if (strcmp(str, "pastevents") == 0){
+        Print(Q);return;
     }
 
-    else if (strstr(str, "pastevents") != NULL && strstr(str, "execute") != NULL)
-    {
+    else if (strstr(str, "pastevents") && strstr(str, "execute")){
         char temp[strlen(str) + 1];
-        for (int i = 0; i < strlen(str); i++)
-        {
+        for (int i = 0; i < strlen(str); i++){
             temp[i] = str[i];
         }
-        temp[strlen(str)] = 1;
+        temp[strlen(str)] = '\0';
         char *tken = strtok(temp, " \t");
-        int val = -1;
-        while (tken != NULL)
-        {
-            if (strlen(tken) == 2)
-            {
-                // printf("yp");
+        int val = 100;
+        while (tken != NULL){
                 val = tken[0] - '0';
+            if (strlen(tken) == 1){
                 break;
             }
-            else if (strlen(tken) == 3)
-            {
-                // printf("this ");
-                // printf("%c ",token[0]);
-                // printf("%c ",token[1]);
+            else if (strlen(tken) == 2){
                 val = tken[0] - '0';
                 val *= 10;
                 val += (tken[1] - '0');
@@ -99,45 +72,38 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
             }
             tken = strtok(NULL, " \t");
         }
-        // printf("val is %d\n",val);
-        if (val > Q->numelems)
-        {
-            printf("Index Out of range!!\n");
+        if (val > Q->numelems){
+            printf("Index Out of range !!\n");
+            printf("The number of commands in history are %d\n", Q->numelems);
             return;
         }
+
         char *input = findElem(Q, Q->numelems - val + 1);
-        // printf("%s",cmd);
+
         FILE *fp = fopen(path, "r");
-        if (fp == NULL)
-        {
+        if (fp == NULL){
             perror("Error opening file");
             return ;
         }
+
+        // store the last command in the history file
         fseek(fp, 0, SEEK_END); // pointer set to next to eof
         long long int file_size = ftell(fp);
         long long int pos = file_size;
         int linenum = 0;
         // printf("here is %c\n",fgetc(fp));
-        char line[1024];
-        while (linenum < 2 && pos >= 0)
-        {
-            // printf("padharo");
+        while (linenum < 2 && pos >= 0){
             fseek(fp, --pos, SEEK_SET);
-            if (fgetc(fp) == '\n')
-            {
+            if (fgetc(fp) == '\n'){
                 linenum++;
             }
         }
-
+        char line[1024];
         fgets(line, sizeof(line), fp);
         fclose(fp);
-
-        if (strstr(input, pastevents) == NULL && strcmp(input, line) != 0)
-        {
-
+        if (strstr(input, pastevents) == NULL && strcmp(input, line) != 0){
             FILE *file = fopen(path, "a");
-            if (file == NULL)
-            {
+            if (file == NULL){
                 // printf("%s\n",path);
                 perror("Error opening the history file");
             }
@@ -152,8 +118,7 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
         char *token = strtok(input, ";");
         int k = 0;
 
-        while (token != NULL)
-        {
+        while (token != NULL){
             commands[k] = token;
             k++;
             token = strtok(NULL, ";");
@@ -161,15 +126,12 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
 
         // seperated by ; and stored in commmands which is array of pointers
         // loop for commands free of semicolons
-        for (int j = 0; j < k; j++)
-        {
+        for (int j = 0; j < k; j++){
             int onlybg = 0;
             // check if u have only &
             int a;
-            for (a = strlen(commands[j]) - 1; a >= 0; a--)
-            {
-                if (commands[j][a] == ' ' || commands[j][a] == '\t')
-                {
+            for (a = strlen(commands[j]) - 1; a >= 0; a--){
+                if (commands[j][a] == ' ' || commands[j][a] == '\t'){
                 }
                 else
                 {
@@ -271,5 +233,10 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
                 }
             }
         }
+ 
+        return;
+    }
+    else{
+        printf("Invalid input\n");
     }
 }

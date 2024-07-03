@@ -75,7 +75,6 @@ void combinedexecute(char* str,int bg,struct allprocesses* procarr,int* numproce
             seek(str,prevdir,homedir);
         }
         else if(strstr(str,"pastevents")!=NULL){
-            // printf("inside this");
             executepastevents(str,homedir,prevdir,procarr,numprocess,procarract,numprocessact);
         }
         else if(strstr(str,"proclore")!=NULL){
@@ -105,12 +104,15 @@ void combinedexecute(char* str,int bg,struct allprocesses* procarr,int* numproce
 }
 
 void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numprocess,struct allprocesses* procarract,int* numprocessact){
+
     int status;
-    char* commands[1024];
+    
     char newstr[1024];
     strcpy(newstr,str);
-    char *token = strtok(newstr, " <>\t");
+    
+    char* commands[1024];
     int k=0;
+    char *token = strtok(newstr, " <>\t");
     while (token!=NULL){
         commands[k]=(char*)malloc(sizeof(char)*(strlen(token)+10));
         strcpy(commands[k],token);
@@ -119,30 +121,7 @@ void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numproces
     }
     commands[k]=NULL;
     int pid=fork();
-    // char* commands[1024];
-    // char newstr[1024];
-    // strcpy(newstr,str);
-    // char *token = strtok(newstr, " \t");
-    // int k=0;
-    // while (token!=NULL){
-    //     commands[k]=token;
-    //     k++;
-    //     token=strtok(NULL," \t");
-    // }
-    // commands[k]=NULL;
-    // printf("%s\n",str);
     if(pid==0){
-        // fgpid=getpid();
-        // int status;
-        // waitpid(-1,&status,0);
-        // if(WIFEXITED(status)==1){
-            // printf("command executed successfully");
-        // }
-        // else{
-            // printf("command failed");
-        // }
-        // if(bg!=0){
-            // printf(" pid of child is %d",getpid());            //getpid();
             fflush(stdout);
             // if(strstr(str,"sed")){
             //     char* cmd[2];
@@ -152,63 +131,50 @@ void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numproces
             //     perror("execvp");
             //     exit(EXIT_FAILURE);
             // }else{
-                // printf("%s\n",str);
-                // char* cmd[2];
-                // cmd[0]="sh";
-                // cmd[1]="-c";
-        setpgid(0,0);
-                // cmd[0]=str;
-                // cmd[1]=NULL;
-                if(commands[0]=="sed"){
-                    
-                }else{
-                    execvp(commands[0],commands);
-                    perror("execvp");
-                    exit(EXIT_FAILURE);
-                }
+            // printf("%s\n",str);
+            // char* cmd[2];
+            // cmd[0]="sh";
+            // cmd[1]="-c"; 
+            setpgid(0,0);
+            // cmd[0]=str;
+            // cmd[1]=NULL;
+            if(commands[0]=="sed"){
 
-                   
-                // printf("here");
-            // }
-        // }
-        // else{
-        //     exit(1);
-        // }
+            }else{
+                execvp(commands[0],commands);
+                perror("execvp");
+                exit(EXIT_FAILURE);
+            }
     }
     else if(pid>0){
         if(!bg){
+            // wait since this is a parent process
+
             fgpid=pid;
-            // waitpid(pid,&status,0);
-            strcpy(procarr[(*numprocessact)].procname,str);
+
             char* tempid=converttostring(pid);
+            strcpy(procarr[(*numprocessact)].procname,str);
+
             strcpy(procarr[(*numprocessact)].procid,tempid);
             (*numprocessact)++;
             while(1){
                 int status2;
                 int rr=waitpid(pid,&status2,WUNTRACED);
                 if(WIFSTOPPED(status2)){
-                procarr[(*numprocess)].flag=0;
-                strcpy(procarr[(*numprocess)].procname,str);
-                strcpy(procarract[(*numprocessact)].procname,str);
-                char* tempid=converttostring(pid);
-                strcpy(procarr[(*numprocess)].procid,tempid);
-                strcpy(procarract[(*numprocessact)].procid,tempid);
-                (*numprocess)++;
-                (*numprocessact)++;
-                break;
-            }
-            if(rr>0 || WIFEXITED(status2)){
+                    procarr[(*numprocess)].flag=0;
+                    strcpy(procarr[(*numprocess)].procname,str);
+                    strcpy(procarract[(*numprocessact)].procname,str);
+                    char* tempid=converttostring(pid);
+                    strcpy(procarr[(*numprocess)].procid,tempid);
+                    strcpy(procarract[(*numprocessact)].procid,tempid);
+                    (*numprocess)++;
+                    (*numprocessact)++;
                     break;
+                }
+                if(rr>0 || WIFEXITED(status2)){
+                    break;
+                }
             }
-        }
-        //     if (WIFEXITED(status)) {
-        //     // printf("Child %d process terminated with status: %d\n",pid, WEXITSTATUS(status));
-        // } else {
-        //     // printf("Child process terminated abnormally.\n");
-        // }
-            // if(WIFEXITED(status)){
-
-            // }
         }
         else{
             printf("%d\n",pid);            //getpid();
