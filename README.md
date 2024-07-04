@@ -276,11 +276,21 @@ Lorem Ipsum
 <JohnDoe@SYS:~> cat b.txt
 1212
 ```
-### 8. Signals
+---
+### 8. Ping command
 
-- <ctrl>C or SIGINT does not kill *Terminal*
-- <ctrl>Z or SIGTSTP does not kill *Terminal*
-- <ctrl>D or an EOF safely logs out of the shell (functionally equivalent to the exit command)
+ping command is used to send signals to processes. The pid of a process and a signal number which corresponds the signal to be sent to the process is expected in input. 
+
+- The pid can be any of the job numbers listed using the command jobs .
+- The signal_number can be any of the signals listed under the manpage signal(7).
+
+#### Keyboard Signals
+
+Ctrl - C :Interrupt any currently running foreground process by sending it the SIGINT signal. It has no effect if no foreground process is currently running.
+
+Ctrl - D: Log out of your shell (after killing all processes) while having no effect on the actual terminal.
+
+Ctrl - Z: Push the (if any) running foreground process to the background and change it’s state from “Running” to “Stopped”. It has no effect on the shell if no foreground process is running.
 
 ---
 
@@ -301,16 +311,6 @@ $ activities
 
 ---
 
-### 10. Ping - Sends a specified signal to the process with the specified job number
-
-
-$ ping [pid] [signal_number]
-
-
-- The pid can be any of the job numbers listed using the command jobs .
-- The signal_number can be any of the signals listed under the manpage signal(7).
-
----
 
 ### 11. fg - Brings the running or stopped process specified by the pid to the foreground
 

@@ -11,12 +11,14 @@ void ping(char* str,struct allprocesses* procarr,int* num){
         k++;
         token=strtok(NULL," \t");
     }
+    if(k!=3){
+        printf("Invalid number of arguments\n");
+        return;
+    }
     int pid=atoi(commands[1]);      
     int signal=atoi(commands[2]);      
-    printf("%d\n",signal);
     signal=signal%32;
     kill(pid,signal);
     printf("Sent signal %d to process with pid %d\n",signal,pid);
     
-    // printf("hello");
 }   

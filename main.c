@@ -34,7 +34,9 @@ int main() {
     getcwd(prevdir,sizeof(prevdir));
     getcwd(homedir,sizeof(homedir));
     int i=0;
+    // CTRL C
     signal(SIGINT, sigint_handler);
+    // CTRL Z
     signal(SIGTSTP, sigtstp_handler);
     struct allprocesses procarr[1024];
     struct allprocesses procarract[1024];
@@ -61,6 +63,8 @@ int main() {
         char input[1024];
         char* check=fgets(input, sizeof(input), stdin);
 
+
+        // following is for CTRL D
         if(check==NULL){
             kill(0,SIGTERM);
             printf("\n");
