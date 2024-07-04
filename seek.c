@@ -1,182 +1,37 @@
 #include "headers.h"
-
-// handle cases od showing error msg when incorrect input is given
-void executeseek(char *path, char *target, char *prevdir, char *homedir, int ff, int df, int ef, int flag)
+void executeseek(char *path, char *target,int df,int ef,int ff, char** files,int *idx)
 {
-    DIR *directory = opendir(path);
-    if (directory == NULL)
-    {
-        printf("Missing permissions for the directory\n");
-        return;
-    }
-    struct dirent *ptr = readdir(directory);
-    struct dirent *ptr2 = readdir(directory);
-    char *names[1024];
-    int num = 0;
-    if (df + ef + ff == 0)
-    {
-        df = 1;
-        ff = 1;
-    }
-    if (ef == 0)
-    {
-        while (ptr != NULL)
-        {
-            if (strcmp(ptr->d_name, ".") != 0 && strcmp(ptr->d_name, "..") != 0)
-            {
-                char full_path[1024];
-                snprintf(full_path, sizeof(full_path), "%s/%s", path, ptr->d_name);
-                struct stat info;
-                int val = stat(ptr->d_name, &info);
-                if (val == 0){
-                    if (S_ISDIR(info.st_mode)){
-                        if (strstr(ptr->d_name, target)){
-                            if (df == 1){
-                                if (flag != 1){
-                                    char pwd[1024];
-                                    getcwd(pwd, sizeof(pwd));
-                                    char *temp = (char *)malloc(sizeof(char) * 1024);
-                                    for (int i = 0; i < strlen(pwd); i++){
-                                        temp[i] = pwd[i];
-                                    }
-                                    temp[strlen(pwd)] = '\0';
-                                    if (strstr(pwd, homedir)){
-                                        temp += strlen(homedir);
-                                    }
-                                    printf(".%s/", temp);
-                                }
-                                if (flag == 1){
-                                    printf("./");
-                                }
-                                printf("%s\n", ptr->d_name);
-                                executeseek(full_path, target, prevdir, homedir, ff, df, ef, 0);
-                            }
-                            if (ff == 1){
-                                printf("./%s\n", ptr->d_name);
-                            }
-                        }
-                        else
-                        {
-                            executeseek(full_path, target, prevdir, homedir, ff, df, ef, 0);
-                        }
+    DIR *dir;
+    struct dirent *file_path_struct;
+    struct stat fileStat;
+    
+    dir = opendir(path);
+    if (dir) {
+        while ((file_path_struct = readdir(dir)) != NULL) {
+            if (strcmp(file_path_struct->d_name, ".") == 0 || strcmp(file_path_struct->d_name, "..") == 0) {
+                continue; 
+            }
+            char filePath[1024];
+            snprintf(filePath, sizeof(filePath), "%s/%s", path, file_path_struct->d_name);
+            if (stat(filePath, &fileStat) == 0) {
+                // printf("%s\n",file_path_struct->d_name);
+                if ( strcmp(file_path_struct->d_name,target)!=0) {
+                    // Recursively search in subdirectories
+                    if(S_ISDIR(fileStat.st_mode)){
+                        // printf("dir: %s\n",filePath);
+                        executeseek(filePath, target,df,ef,ff,files,idx);
                     }
-                    if (strstr(ptr->d_name, target))
-                    {
-                        if (ff == 1)
-                        {
-                            if (flag != 1)
-                            {
-                                char pwd[1024];
-                                getcwd(pwd, sizeof(pwd));
-                                char *temp = (char *)malloc(sizeof(char) * 1024);
-                                for (int i = 0; i < strlen(pwd); i++)
-                                {
-                                    temp[i] = pwd[i];
-                                }
-                                temp[strlen(pwd)] = '\0';
-                                if (strstr(pwd, homedir))
-                                {
-                                    temp += strlen(homedir);
-                                }
-                                printf(".%s/", temp);
-                            }
-                            printf("./%s\n", ptr->d_name);
-                        }
-                    }
+                } else if (strcmp(file_path_struct->d_name, target) == 0){
+                    strcpy(files[(*idx)++],filePath);
                 }
             }
-            ptr = readdir(directory);
         }
-        return;
-    }
-    else
-    {
-        int countc = 0;
-        while (ptr != NULL)
-        {
-            if (strcmp(ptr->d_name, ".") != 0 && strcmp(ptr->d_name, "..") != 0)
-            {
-                char full_path[1024];
-                snprintf(full_path, sizeof(full_path), "%s/%s", path, ptr->d_name);
-                struct stat info;
-                int val = stat(ptr->d_name, &info);
-                if (val == 0)
-                {
-                    if (strstr(ptr->d_name, target))
-                    {
-                        countc++;
-                    }
-                }
-            }
-            ptr = readdir(directory);
-        }
-        if (countc != 1)
-        {
-            return;
-        }
-        else
-        {
-            while (ptr2 != NULL)
-            {
-                if (strcmp(ptr2->d_name, ".") != 0 && strcmp(ptr2->d_name, "..") != 0)
-                {
-                    char full_path[1024];
-                    snprintf(full_path, sizeof(full_path), "%s/%s", path, ptr2->d_name);
-                    struct stat info;
-                    int val = stat(ptr2->d_name, &info);
-                    if (val == 0)
-                    {
-                        if (strstr(ptr2->d_name, target))
-                        {
-                            if (S_ISDIR(info.st_mode))
-                            {
-                                if (df == 1)
-                                {
-                                    printf("%s\n", ptr2->d_name);
-                                }
-                                chdir(ptr2->d_name);
-                                if (ff == 1)
-                                {
-                                    printf("found directory with this name but not a file\n");
-                                    return;
-                                }
-                            }
-                            if (ff == 1)
-                            {
-                                printf("%s\n", ptr2->d_name);
-                            }
-                            if (info.st_mode & S_IRUSR)
-                            {
-                                FILE *fp = fopen(ptr2->d_name, "r");
-                                if (fp == NULL)
-                                {
-                                    perror("Error opening file");
-                                    return;
-                                }
-                                char buf[1024];
-                                while (fgets(buf, sizeof(buf), fp) != NULL)
-                                {
-                                    printf("%s", buf);
-                                }
-                                fclose(fp);
-                            }
-                            else
-                            {
-                                printf("Missing permissions for the task\n");
-                            }
-                        }
-                    }
-                }
-                ptr2 = readdir(directory);
-            }
-        }
+        closedir(dir);
     }
 }
 
-void seek(char *str, char *prevdir, char *homedir)
-{
+void seek(char *str, char *prevdir, char *homedir){
     str += 4;
-
     int ef = 0;
     int ff = 0;
     int df = 0;
@@ -251,93 +106,59 @@ void seek(char *str, char *prevdir, char *homedir)
     {
         path = ".";
     }
-    executeseek(path, target, prevdir, homedir, ff, df, ef, 1);
+    char **files;
+    files = (char **)malloc(sizeof(char *) * 1024);
+    for (int j = 0; j < 1024; j++){
+        files[j] = (char *)malloc(sizeof(char) * 1024);
+    }
+    int idx=0;
+    executeseek(path, target,df,ef,ff,files,&idx);
+    int file_count = 0;
+    for (int j = 0; j < idx; j++)    {
+        // printf("%s\n",files[j]);
+        struct stat file_info;
+        if (stat(files[j], &file_info) == 0){
+            if (ef == 0){
+                if (df == 0 && ff == 0){
+                    printf("%s\n", files[j]);
+                    file_count = 1;
+                }
+                else if (df && S_ISDIR(file_info.st_mode)){
+                    printf("%s\n", files[j]);
+                    file_count = 1;
+                }
+                else if (ff && S_ISREG(file_info.st_mode)){
+                    printf("%s\n", files[j]);
+                    file_count = 1;
+                }
+            }
+            else{
+                if (idx != 1){
+                    break;
+                }
+                if (access(files[j], R_OK | X_OK) != 0){
+                    printf("Missing permissions for task!\n");
+                }
+                else{
+                    if (S_ISDIR(file_info.st_mode)){
+                        chdir(files[j]);
+                    }
+                    else{
+                        if (ff == 1 || (df == 0 && ff == 0)){
+                            char *file_content = (char *)malloc(sizeof(char) * 1024);
+                            FILE *f_c = fopen(files[j], "r");
+                            while (fgets(file_content, 1024, f_c)){
+                                printf("%s\n", file_content);
+                                file_count = 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (file_count == 0){
+        printf("No match found!\n");
+    }
+
 }
-
-// void seek(char* str,char* prevdir,char* homedir){
-//     str+=4;
-//     int ef=0;
-//     int ff=0;
-//     int df=0;
-//     char* token=strtok(str," ");
-//     char* path=NULL;
-//     char* target=NULL;
-//     while(token!=NULL){
-//         // printf("here ");
-//         if(token[0]=='-'){
-//             // printf("this ");
-//             if(strlen(token)==2&& token[1]=='d'){
-//                     df=1;
-//             }
-//             if(strlen(token)==2&&token[1]=='e'){
-//                 ef=1;
-//             }
-//             if(strlen(token)==2&&token[1]=='f'){
-//                 ff=1;
-//             }
-//         }
-//         else{
-//             if(target==NULL){
-//                 target=token;
-//             }
-//             else{
-//                 // printf("\ninside path\n");
-//                 path=token;
-//             }
-//         }
-//         token=strtok(NULL," ");
-//         // printf("%s ",token);
-//     }
-
-//     if(df==1 && ff==1){
-//         printf("Invalid flags!\n");
-//         return;
-//     }
-//     if(path==NULL){
-//         path=".";
-//     }
-
-//     // char newpath[strlen(path)+5];
-//     // newpath[0]='w';newpath[1]='a';newpath[2]='r';newpath[3]='p';newpath[4]=' ';
-//     // for (int i = 5; i < strlen(path)+5; i++){
-//     //     newpath[i]=path[i-5];
-//     // }
-//     // printf("%s\n",newpath);
-//     // printf("%c ",path[strlen()])
-//     // char store[1024];
-//     // getcwd(store,sizeof(store));
-//     // warp(newpath,prevdir,homedir);
-//     // char this[1024];
-//     // getcwd(this,sizeof(this));
-//     // printf("%s\n",this);
-//     if(ef==0){
-//         DIR* directory=opendir(path);
-//         struct dirent* ptr=readdir(directory);
-//     // char* names[1024];
-//     // int num=0;
-
-//     while(ptr!=NULL){
-//         // printf("here");
-//         struct stat info;
-//         int val=stat(ptr->d_name,&info);
-//         if(val==0){
-//             int isdir=S_ISDIR(info.st_mode);
-//             if(isdir&& ff==0){
-//                 if(strcmp(ptr->d_name,target)==0){
-//                     printf("./%s ",ptr->d_name);
-//                 }
-
-//             }
-//             if(!isdir && df==0){
-//                 if(strcmp(ptr->d_name,target)==0){
-//                     printf("./%s ",ptr->d_name);
-//                 }
-//             }
-
-//         }
-//         ptr=readdir(directory);
-//     }
-//     }
-//     // add string warp to store also
-//     // warp(store,prevdir,homedir);
-// }

@@ -35,3 +35,67 @@ clear
 g++ file.cpp
 ./a.	
 ./a.out
+ 	 	 proclore  	 	 
+activities
+ps aux
+ps -e
+activities
+ 	 	proclore 	 	1222 
+proclore 123
+proclore 12
+proclore 1234
+proclore 12345
+proclore 12
+proclore 12344
+proclore 12
+proclore proclore 12345
+proclore 12344
+proclore
+proclore 409948
+proclore 12
+ls
+clear
+proclore 12
+[Aproclore 12345
+proclore
+sleep 10 &
+proclore 413264
+ls
+activites
+activities
+activites
+activities
+ps -e
+proclore 413428
+sleep 10 &
+fg 413573
+ls
+proclore 412782
+ps -e
+proclore 413535
+proclore 12
+ps -e
+proclore 412785
+proclore 413785
+ps -e
+proclore 413992
+seek headhes.h
+seek headers.h
+seek . headers.h
+seek headers.h .
+seek headers.h
+seek headers.h .
+void seek(char* str,char* prevdir,char* homedir);
+seek headers.h .
+[A[A[A[Bwarp ..
+warp ../..
+ls
+warp ..
+seek DSA .
+dwarp ../...
+warp ../../../..
+ls
+seek sdfghgbfvd .
+warp ../.../
+warp ../../..
+seek jbhgedjcbcds .

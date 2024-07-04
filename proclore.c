@@ -41,32 +41,29 @@ void proclore(char* str){
     }
     for (int i = 0; i < val; i++){
         struct Processinfo info;
-        // char* path=(char*)malloc(sizeof(char)*1024);
-        char path[1024];
-        strcpy(path,"/proc/");
-        // printf("\n%s\n",arr[i]);
-        strcat(path,arr[i]);
-        
-        strcat(path,"/status");
-        // printf(" path is %s\n",path);
 
-        // printf("\n%s\n",path);
+        char path[1024];
+
+        strcpy(path,"/proc/");
+        strcat(path,arr[i]);        
+        strcat(path,"/status");
+
         FILE* fp=fopen(path,"r");
-        // if(fp==NULL){
-        //     printf("Invalid input !\n");return;
-        // }else{
-        //     printf("else");
-        // }
-        // printf("yoyoyoyoy");
-        char scanfile[1024*1024]; // this might create a problem if fgets ko seek_cur nahi kiya toh 
+        if(fp==NULL){
+            printf("Invalid input !\n");
+            printf("Error opening file /proc/%s/status file \n",arr[i]);
+            return;
+        }
+
+        char scanfile[1024*1024];
         int count=0;
-        // char* temp;
-        // int iter=0;
+
+        // read the file 
+
+        int c=0;bool f=0;
         while(count!=4){
-            // printf("inside");
-            // iter++;
+            c++;
             fgets(scanfile,sizeof(scanfile),fp);
-            // printf(" %d ",count);
             if(sscanf(scanfile,"Pid: %d",&(info.pid))==1){
                 count++;
             }
@@ -79,20 +76,28 @@ void proclore(char* str){
             if(sscanf(scanfile,"VmSize: %d",&(info.memory_occupied))==1){
                 count++;
             }
+            if(c>1000000){
+                f=true;
+                break;
+            }
         }
-        // printf("%d ",iter);
-        // printf(" came out of while loop ");
+        if(f){
+            printf("Coudln't read the file /proc/%s/status properly \n",arr[i]);
+            continue;
+        }
 
 
         int pgid = getpgrp();
         pid_t fg_pgid = tcgetpgrp(STDIN_FILENO);
 
+        // print + for foreground process 
         if (pgid != fg_pgid) {
-            printf("pid: %d\nprocess Status: %d\nprocess Group: %c\nVirtual memory: %d\n",info.pid,info.groupnum,info.status,info.memory_occupied);
+            printf("pid: %d\nprocess Status: %d\nprocess Group: %c\nVirtual memory: %d\n",info.pid,info.status,info.groupnum,info.memory_occupied);
         }
         else {
             printf("pid: %d\nprocess Status: %c+\nprocess Group: %d\nVirtual memory: %d\n",info.pid,info.status,info.groupnum,info.memory_occupied);
         }
+
         char buffer[1024];
         long len=readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
         
@@ -103,7 +108,5 @@ void proclore(char* str){
         else {
             perror("readlink");
         }
-        
-
     }    
 }
