@@ -238,36 +238,44 @@ executable path : ~/a.out
 
 ---
 
-### 6. File redirection
+### 6. IO redirection
 
-- < [FILE] can be used to redirect input from the specified [FILE] for a command
-- > [FILE] and >> [FILE] can be used to redirect the output to the specified [FILE] for a command. > Overwrites the output file and >> appends to the output file
-- Both input and output redirections can be used on a single command
-  - Example:
-  
-  $ cat < input.txt >> output.txt
-  
-  - Example:
-  
-  $ wc < input.txt > output.txt
-  
+-I/O Redirection is when you the default input/output (which is the terminal) is changed to another file. This file can be used to read input into a program or to capture the output of a program. The shell supports >, <, » (< works with both > and »).
+
+```bash
+> : Outputs to the filename following “>”.
+>> : Similar to “>” but appends instead of overwriting if the file already exists.
+< : Reads input from the filename following “<”.
+```
+The output file is be created (with permissions 0644) if it does not already exist in both > and ».
+
+In case the output file already exists, it is overwritten in case of > and appended to in case of ».
+
+```bash
+<JohnDoe@SYS:~> echo "Hello world" > newfile.txt
+<JohnDoe@SYS:~> cat newfile.txt
+Hello world
+```
 
 ---
 
-### 7. Piping commands
+### 7. Pipes
 
+Pipes are used to pass information between commands. It takes the output from command on left and passes it as standard input to the command on right. The shell supports any number of pipes.
 
-$ <command> | <command>
+```bash
+<JohnDoe@SYS:~> echo "Lorem Ipsum" | wc
+1 2 12      # extra spaces can be present
 
-
-- <command> | <command> can be used to pipe the output of the command on the left side of the pipe to the command on the right side of the pipe
-- Two or more commands can be chained together by piping
-- Piping can be used alongside input and output redirections
-  - Example: cat < in.txt | wc -l > lines.txt
-- Note that in case of a conflict between taking input/output from the pipe or through a redirection, the redirection is given higher preference
-  - Example: cat in.txt | sort > out.txt | wc -l
-  - This shall output 0 since the sort command redirects the output to out.txt and not the pipe
-
+```
+NOTE: Piping can be used alongside input and output redirections
+```bash
+<JohnDoe@SYS:~> cat a.txt
+Lorem Ipsum
+<JohnDoe@SYS:~> cat < a.txt | wc | cat > b.txt
+<JohnDoe@SYS:~> cat b.txt
+1212
+```
 ### 8. Signals
 
 - <ctrl>C or SIGINT does not kill *Terminal*

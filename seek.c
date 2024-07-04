@@ -1,4 +1,5 @@
 #include "headers.h"
+
 void executeseek(char *path, char *target,int df,int ef,int ff, char** files,int *idx)
 {
     DIR *dir;
@@ -97,8 +98,7 @@ void seek(char *str, char *prevdir, char *homedir){
         token = strtok(NULL, " \t");
         // printf("%s ",token);
     }
-    if (df == 1 && ff == 1)
-    {
+    if (df == 1 && ff == 1){
         printf("Invalid flags!\n");
         return;
     }

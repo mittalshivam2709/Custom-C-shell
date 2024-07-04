@@ -188,20 +188,30 @@ int main() {
                 io_pipe_handling(pipesep,pipes,procarr,&numprocess,procarract,&numprocessact,prevdir,homedir);      
              
             }
+
             else if(is_io){
+                // storing input and output file descriptors to restore them later
                 int storein=dup(STDIN_FILENO);
                 int storeout=dup(STDOUT_FILENO);
     
                 int val=io_redirect(commands[j]);
+                // val is the file descriptor of the file
+
                 char* cmd[4];
+                // only first word is the command rest are files hence we have to seperate only first word
                 char* tkn=strtok(commands[j],"<>");
                 combinedexecute(tkn,0,procarr,&numprocess,procarract,&numprocessact,prevdir,homedir);
+
+                // close the file descriptor
                 close(val);
+
+                // restoring the input and output file descriptors
                 dup2(storein,STDIN_FILENO);
                 dup2(storeout,STDOUT_FILENO);
     
-            }else if(ispipe){
-
+            }
+            
+            else if(ispipe){
                 char* token=strtok(commands[j],"|");
                 char** pipesep=(char**)malloc(sizeof(char*)*1024);
                 int pipes=0;
@@ -210,11 +220,8 @@ int main() {
                     // printf("%s\n",token);
                     token=strtok(NULL,"|");
                 }
-                
-                io_pipe_handling(pipesep,pipes,procarr,&numprocess,procarract,&numprocessact,prevdir,homedir);      
-                
+                io_pipe_handling(pipesep,pipes,procarr,&numprocess,procarract,&numprocessact,prevdir,homedir);
             }
-            // printf("jere");
             else{
                 // multiple command having spaces and tabs and & in between 
                 int val=numofcommands(commands[j]);

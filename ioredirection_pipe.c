@@ -25,6 +25,8 @@ void io_pipe_handling(char **pipesep, int num, struct allprocesses *procarr, int
         }
         // fdarrr
         // close fd1 fdd=fd0
+        
+        // if there is both pipe and io redirection then io redirection will be taken care of by this
         io_redirect(pipesep[i]);
 
         // executeprocess(pipesep[i],0,procarr,numprocess,procarract,numprocessact);
@@ -57,12 +59,13 @@ int io_redirect(char* iosepcomm){
     }
     char pwd[1024];
     getcwd(pwd,sizeof(pwd));
+    // no < or > in the command
     if(k==1){
         return 0;
     }
+    // this means only one < or > is there
     if(k==2){
         if(strstr(iosepcomm,"<")){
-            // printf("idhar bhi aa gaya\n");
             char* token=strtok(commands[1]," \t");
             char pwd1[1026];
             sprintf(pwd1,"%s/%s",pwd,token);
@@ -78,6 +81,7 @@ int io_redirect(char* iosepcomm){
             dup2(val,STDIN_FILENO);
             return val;
         }
+        
         else if(strstr(iosepcomm,">>")){
             char* token=strtok(commands[1]," \t");
             char pwd1[1026];
@@ -86,11 +90,12 @@ int io_redirect(char* iosepcomm){
             if(val==-1){
                 val=open(pwd1,O_CREAT | O_APPEND | O_WRONLY ,0644);
             }else{
-            val=open(pwd1,O_APPEND | O_WRONLY);
+                val=open(pwd1,O_APPEND | O_WRONLY);
             }
             dup2(val,STDOUT_FILENO);
             return val;
         }
+        
         else if(strstr(iosepcomm,">") ){
             // printf("in this");
             char* token=strtok(commands[1]," \t");
@@ -111,8 +116,13 @@ int io_redirect(char* iosepcomm){
         }
         
     }
+    // this means < is definitely there along with 
     else if(k==3){
+        
         if(strstr(iosepcomm,">>")){
+
+            // first command is the input file so open it and redirect the input
+
             char* token=strtok(commands[1]," \t");
             char pwd1[1026];
             sprintf(pwd1,"%s/%s",pwd,token);
@@ -127,6 +137,7 @@ int io_redirect(char* iosepcomm){
             val=open(pwd1,O_RDONLY);
             dup2(val,STDIN_FILENO);
             
+            // now the second command is the output file so open it and redirect the output
             char* token2=strtok(commands[2]," \t");
             char pwd2[1026];
             sprintf(pwd2,"%s/%s",pwd,token2);
@@ -136,7 +147,7 @@ int io_redirect(char* iosepcomm){
             }else{
             val=open(pwd2,O_APPEND | O_WRONLY);
             }
-            dup2(val,STDOUT_FILENO);
+                dup2(val,STDOUT_FILENO);
             return val;
         
         }else if(strstr(iosepcomm,">")){
@@ -165,6 +176,10 @@ int io_redirect(char* iosepcomm){
             }
             dup2(val,STDOUT_FILENO);
             return val;
+        }
+        else{
+            printf("Invalid command\n");
+            return 0;
         }
     }
     // a > a,txt
