@@ -81,7 +81,7 @@ int main() {
             if(procstat!=0 && procstat!=-1){
                 // ended processes
                 if(procarr[check].flag){
-                    // print the info hence continue
+                    // already printed the info hence continue
                     continue;
                 }
                 else{
@@ -103,7 +103,6 @@ int main() {
             perror("Error opening file");
             return 0;
         }
-
 
         // this is to find the last line in history.txt which will be the last input given
         // since if this is same as the current input, it must not be stored.

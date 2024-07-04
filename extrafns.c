@@ -148,7 +148,7 @@ void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numproces
     }
     else if(pid>0){
         if(!bg){
-            // wait since this is a parent process
+            // wait since this is a foreground process
 
             fgpid=pid;
 
@@ -164,9 +164,9 @@ void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numproces
                     procarr[(*numprocess)].flag=0;
                     strcpy(procarr[(*numprocess)].procname,str);
                     strcpy(procarract[(*numprocessact)].procname,str);
-                    char* tempid=converttostring(pid);
                     strcpy(procarr[(*numprocess)].procid,tempid);
                     strcpy(procarract[(*numprocessact)].procid,tempid);
+
                     (*numprocess)++;
                     (*numprocessact)++;
                     break;
@@ -179,23 +179,17 @@ void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numproces
         else{
             printf("%d\n",pid);            //getpid();
             // arr[(*idx)++]=pid;
+            char* tempid=converttostring(pid);
+
             procarr[(*numprocess)].flag=0;
             strcpy(procarr[(*numprocess)].procname,str);
             strcpy(procarract[(*numprocessact)].procname,str);
-            char* tempid=converttostring(pid);
             strcpy(procarr[(*numprocess)].procid,tempid);
             strcpy(procarract[(*numprocessact)].procid,tempid);
             (*numprocess)++;
             (*numprocessact)++;
         }
         
-        // waitpid(pid, &status, 0);
-        // if(WIFEXITED(status)==1){
-        //     printf("executed normally");
-        // }
-        // else{
-        //     printf("command failed");
-        // }
     }
 }
 

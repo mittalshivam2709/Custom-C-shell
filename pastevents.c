@@ -101,6 +101,9 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
         char line[1024];
         fgets(line, sizeof(line), fp);
         fclose(fp);
+
+        // code from main.c to execute the command
+        
         if (strstr(input, pastevents) == NULL && strcmp(input, line) != 0){
             FILE *file = fopen(path, "a");
             if (file == NULL){
@@ -172,7 +175,6 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
             {
                 int storein = dup(STDIN_FILENO);
                 int storeout = dup(STDOUT_FILENO);
-
                 int val = io_redirect(commands[j]);
                 char *cmd[4];
                 char *tkn = strtok(commands[j], "<>");

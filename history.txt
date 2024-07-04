@@ -12,3 +12,26 @@ pasteventes exectue 35
 sleep 5
 sleep 5&
 sleep 5
+iman cd
+iMan cd
+iMan lol
+iMan sleep
+g++ file.cpp
+./a.out
+gcc nete.c
+gcc file.c
+./a.out
+gcc file.c
+./a.out
+g++ file.cpp
+./a.out
+sleep 10 &
+neonate -n 4
+sleep 10
+warp -
+warp fold/a
+warp -
+clear
+g++ file.cpp
+./a.	
+./a.out

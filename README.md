@@ -188,43 +188,53 @@ peek test
 
 
 
-### 4. proclore - Prints the process related info of a shell program
+### 4. proclore command
 
+- proclore is used to obtain information regarding a process. If an argument is missing, information of the shell is printed.
 
-$ proclore [pid]
+  Information printed :
 
+  - pid
+  - Process Status (R/R+/S/S+/Z)
+  - Process group
+  - Virtual Memory
+  - Executable path of process
 
-- Displays the pid, process status, memory consumption and executable path for the specified process
-- Passing a valid pid displays the info related to the specified pid
-- If no arguments are passed, instead displays the info related to the current *Terminal* process
+- Process states :
 
+  - R/R+ : Running
+  - S/S+ : Sleeping in an interruptible wait
+  - Z : Zombie
+  - The “+” signifies whether it is a foreground or background process ('+' if it is a foreground process).
+
+```bash
+<JohnDoe@SYS:~> proclore
+pid : 210
+process status : R+
+Process Group : 210
+Virtual memory : 167142
+executable path : ~/a.out
+
+```
 ---
 
-### 5. seek - Looks for files and directory in the specified target directory
+### 5. seek command
 
-
-$ seek <flags> <search> <target_directory>
+- ‘seek’ command looks for a file/directory in the specified target directory (or current if no directory is specified). 
+- It returns a list of relative paths (from target directory) of all matching files/directories (files in green and directories in blue) separated with a newline character. Note that by files, the text here refers to non-directory files.
 
 
 - Flags :
 
-  - -d : Only look for directories (ignore files even if name matches)
+  - -d : Only look for directories (ignores files even if name matches)
   - -f : Only look for files (ignore directories even if name matches)
   - -d and -f flag can’t be used at the same time.
   - If No flags are given, then it will look for both files and directory
-  - -e : This flag is effective only when a single file or a single directory with the name is found. If only one file (and no directories) is found, then print it’s output. If only one directory (and no files) is found, then change current working directory to it
+  - -e : This flag is effective only when a single file or a single directory with the name is found. If only one file (and no directories) is found, then print it’s output. If only one directory (and no files) is found, then it changes current working directory to it. Otherwise, the flag has no effect. This flag works with -d and -f flags. If -e flag is enabled but the directory does not have access permission (execute) or file does not have read permission, then “Missing permissions for task!” is printed.
 
-- search :
+- Argument 1 : The target that the user is looking for. A name without whitespace characters must be given here.
 
-  - Write the file or directory that needs to be searched inside the <target_directory> tree
-
-- target_directory :
-
-  - Write the folder in whose the file or folder is to be printed
-
-- “No match found!” will be printed in case no matching files/directories is found.
-
-- It returns a list of relative paths (from target directory) of all matching files/directories *(files in green and directories in blue)* separated with a newline character.
+- Argument 2 : The path to target directory where the search will be performed (this path can have symbols like . and ~ similar to the peek command). If this argument is missing, target directory is the current working directory. The target directory’s tree is searched (and not just the directory).
 
 ---
 
@@ -323,7 +333,72 @@ $ neonate [OPTION] N
   - This prints the PID of the most recently created process on the system after every N seconds
 - A keypress of x stops execution of the command
 
-### 14. iMan : fetches man pages from the internet using sockets and outputs it to the terminal (stdout) using the website http://man.he.net/ to get the man pages.
+### 14. iMan Command 
+
+iMan <command_name>
+<command_name> is the name of the man page that you want to fetch.
+
+This fetches the man page for the given command from http://man.he.net/ and prints an error statement if the page does not exist.
+
+```bash
+
+<JohnDoe@SYS:~> iMan sleep
+NAME="KEYWORDS" CONTENT="sleep">
+
+
+
+sleep
+
+SLEEP(1)                         User Commands                        SLEEP(1)
+
+NAME
+       sleep - delay for a specified amount of time
+
+SYNOPSIS
+       sleep NUMBER[SUFFIX]...
+       sleep OPTION
+
+DESCRIPTION
+       Pause for NUMBER seconds.  SUFFIX may be 's' for seconds (the default),
+       'm' for minutes, 'h' for hours or 'd' for days.  Unlike most  implemen-
+       tations  that require NUMBER be an integer, here NUMBER may be an arbi-
+       trary floating point number.  Given two or more  arguments,  pause  for
+       the amount of time specified by the sum of their values.
+
+       --help display this help and exit
+
+       --version
+              output version information and exit
+
+AUTHOR
+       Written by Jim Meyering and Paul Eggert.
+
+REPORTING BUGS
+       GNU coreutils online help: &lt;https://www.gnu.org/software/coreutils/&gt;
+       Report sleep translation bugs to &lt;https://translationproject.org/team/&gt;
+
+COPYRIGHT
+       Copyright  (C) 2018 Free Software Foundation, Inc.  License GPLv3+: GNU
+       GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.
+       This is free software: you are free  to  change  and  redistribute  it.
+       There is NO WARRANTY, to the extent permitted by law.
+
+SEE ALSO
+       sleep(3)
+
+       Full documentation at: &lt;https://www.gnu.org/software/coreutils/sleep&gt;
+       or available locally via: info '(coreutils) sleep invocation'
+
+GNU coreutils 8.30              September 2019                        SLEEP(1)
+
+Man Pages Copyright Respective Owners.  Site Copyright (C) 1994 - 2024
+Hurricane Electric.
+All Rights Reserved.
+
+
+
+
+fetches man pages from the internet using sockets and outputs it to the terminal (stdout) using the website http://man.he.net/ to get the man pages.
 
 
 $ iMan <command_name>
@@ -333,13 +408,12 @@ $ iMan <command_name>
 
 - This will fetch the man page (atleast the name, synopsis and description of the command) for the given command from http://man.he.net/ and will Print an error statement if the page does not exist.
 
-### 15. finish : Last but not the least, this will lead to the Exit, out of the shell.
+``` 
 
+## Additional features
 
-$ finish
+- The user can execute other files from within the shell (including the shell).
 
-
-- It will display a messese "Oh! You are out of your *ShellCraft* now!" in red colour.
 
 # Assumptions
 
