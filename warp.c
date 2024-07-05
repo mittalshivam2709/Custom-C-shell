@@ -21,7 +21,6 @@ void warp(char* str,char* prevdir,char* homedir){
     }
 
     else{
-
         newstr+=1; 
         char* token=strtok(newstr," \t/");
         while(token!=NULL){

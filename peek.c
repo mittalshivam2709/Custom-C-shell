@@ -17,7 +17,6 @@ void peek(char* str,char* prevdir,char* homedir){
     char* path=NULL;
     char* token=strtok(newstr," \t");
     while(token!=NULL){
-
         if(token[0]=='-'){
             if(strlen(token)==3 && (strcmp(token,"-al")==0 || strcmp(token,"-la")==0)){
                 af=lf=1;

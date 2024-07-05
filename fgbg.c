@@ -3,6 +3,7 @@
 void fgbg(char* str,struct allprocesses* procarr,int* numprocess){
     // printf("yo");
 
+
     char* commands[1024];
     char newstr[1024];
     strcpy(newstr,str);

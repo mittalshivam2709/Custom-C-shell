@@ -11,6 +11,7 @@ void executepastevents(char *str, char *homedir, char *prevdir, struct allproces
     }
     // extract last 15 commands
 
+
     long long int linenum = 0;
     fseek(fp, 0, SEEK_END); // pointer set to next to eof
     long long int file_size = ftell(fp);

@@ -86,7 +86,6 @@ void proclore(char* str){
             continue;
         }
 
-
         int pgid = getpgrp();
         pid_t fg_pgid = tcgetpgrp(STDIN_FILENO);
 

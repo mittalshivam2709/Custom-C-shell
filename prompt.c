@@ -1,6 +1,5 @@
 #include"headers.h"
 
-
 void prompt(int isfirst,char* homedir){
         char *username = getenv("LOGNAME"); //LOGNAME first
         if (username == NULL) {

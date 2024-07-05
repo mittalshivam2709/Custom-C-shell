@@ -10,7 +10,6 @@ struct Processinfo
     char* executable_path;
 };
 
-
 void proclore(char* str);
 int count (char* str);
 int finddigits(int val);

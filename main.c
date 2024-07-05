@@ -63,8 +63,6 @@ int main() {
         char input[1024];
         char* check=fgets(input, sizeof(input), stdin);
 
-
-
         // following is for CTRL D
         if(check==NULL){
             kill(0,SIGTERM);

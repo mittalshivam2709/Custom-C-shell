@@ -7,8 +7,8 @@ void executeseek(char *path, char *target,int df,int ef,int ff, char** files,int
     struct stat fileStat;
     
     dir = opendir(path);
-    if (dir) {
-        while ((file_path_struct = readdir(dir)) != NULL) {
+    if(dir){
+        while((file_path_struct = readdir(dir)) != NULL){
             if (strcmp(file_path_struct->d_name, ".") == 0 || strcmp(file_path_struct->d_name, "..") == 0) {
                 continue; 
             }
@@ -16,13 +16,13 @@ void executeseek(char *path, char *target,int df,int ef,int ff, char** files,int
             snprintf(filePath, sizeof(filePath), "%s/%s", path, file_path_struct->d_name);
             if (stat(filePath, &fileStat) == 0) {
                 // printf("%s\n",file_path_struct->d_name);
-                if ( strcmp(file_path_struct->d_name,target)!=0) {
+                if (strcmp(file_path_struct->d_name,target)!=0){
                     // Recursively search in subdirectories
                     if(S_ISDIR(fileStat.st_mode)){
                         // printf("dir: %s\n",filePath);
                         executeseek(filePath, target,df,ef,ff,files,idx);
                     }
-                } else if (strcmp(file_path_struct->d_name, target) == 0){
+                }else if(strcmp(file_path_struct->d_name, target) == 0){
                     strcpy(files[(*idx)++],filePath);
                 }
             }

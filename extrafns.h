@@ -1,7 +1,6 @@
 #ifndef _EXTRAFNS_H
 #define _EXTRAFNS_H
 
-
 int numofcommands(char* str);
 void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numprocess,struct allprocesses* procarract,int* numprocessact);
 char** seperateands(char* str);

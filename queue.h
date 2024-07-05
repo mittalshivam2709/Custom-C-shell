@@ -2,8 +2,7 @@
 #define _QUEUE_H
 typedef struct Queuestr *Queue;
 
-struct node
-{
+struct node{
     char* val;
     struct node *next;
     struct node *prev;

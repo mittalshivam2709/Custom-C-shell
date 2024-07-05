@@ -6,8 +6,7 @@ int comp(const void* a,const void*b){
 
 void activities(char* str,struct allprocesses* procarr,int* numprocess){
 
-    qsort(procarr,*numprocess,sizeof(struct allprocesses),comp);
-    
+    qsort(procarr,*numprocess,sizeof(struct allprocesses),comp);    
     for (int i = 0; i < *numprocess; i++){
         char path[1024];
         strcpy(path,"/proc/");

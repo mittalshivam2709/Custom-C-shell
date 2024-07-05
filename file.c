@@ -7,8 +7,7 @@
 
 #define MAX_BUFFER_SIZE 4096
 
-// Function to perform DNS resolution and return the IP address
-
+// Function to perform DNS resolution and return the IP addres
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <man_page_name>\n", argv[0]);

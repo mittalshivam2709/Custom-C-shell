@@ -3,10 +3,6 @@
 void io_pipe_handling(char **pipesep, int num, struct allprocesses *procarr, int *numprocess, struct allprocesses *procarract, int *numprocessact,char* prevdir,char* homedir)
 {
     int pipe1[num][2];
-    // printf("%d\n",num);
-    // for (int i = 0; i < num; i++){
-    //     printf("%s\n",pipesep[i]);
-    // }
     int storein=dup(STDIN_FILENO);
     int storeout=dup(STDOUT_FILENO);
     for (int i = 0; i < num; i++){

@@ -1,12 +1,10 @@
 #include "headers.h"
 
-int IsEmpty(Queue head)
-{
+int IsEmpty(Queue head){
     return (head->numelems == 0);
 }
 
-Queue Init(Queue Q)
-{
+Queue Init(Queue Q){
     Q = (Queue)malloc(sizeof(struct Queuestr));
     if (Q == NULL)
     {

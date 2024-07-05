@@ -3,4 +3,5 @@
 
 void activities(char* str,struct allprocesses* procarr,int* numprocess);
 
+
 #endif

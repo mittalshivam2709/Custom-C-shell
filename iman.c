@@ -45,7 +45,6 @@ void printmanpage(char* str){
         return;
     }
 
-
     // Initialize server address struct
     memset(&server, 0, sizeof(server));
     server.sin_family = AF_INET;

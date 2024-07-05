@@ -11,6 +11,7 @@ void ping(char* str,struct allprocesses* procarr,int* num){
         k++;
         token=strtok(NULL," \t");
     }
+    
     if(k!=3){
         printf("Invalid number of arguments\n");
         return;

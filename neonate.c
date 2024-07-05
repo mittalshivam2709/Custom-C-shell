@@ -21,6 +21,7 @@ void disableRawMode() {
  * The c_lflag field is for “local flags”
 */
 
+
 void enableRawMode() {
     if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) die("tcgetattr");
     atexit(disableRawMode);

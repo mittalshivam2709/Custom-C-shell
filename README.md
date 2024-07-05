@@ -340,33 +340,10 @@ The command prints the Process-ID of the most recently created process on the sy
 
 This fetches the man page for the given command from http://man.he.net/ and prints an error statement if the page does not exist.
 
-## Additional features
+## Additional feature
 
 - The user can execute other files from within the shell (including the shell).
 
+Author: [Shivam Mittal](https://github.com/mittalshivam2709)
 
-# Assumptions
-
-
-1. Assuming the input size will be maximum of *1000* bytes.
-2. In the pastevents command, if the command contains pastevents, then it wont be stored in history.txt, or else the corresponding command will be checked with the last command and if both of them are not same, then it will be stored in *history.txt* to ensure that 'unique consecutive commands' are only appended.
-3. All paths involved are less than *1000 characters*.
-4. Each command is less than *1000 characters*.
-5. History is stored in txt file in the same folder as where the executable is stored.
-6. In IO_redirection , I am appending/ redirecting the output to the mentioned text-file with a "\n" in between the lines for clear presentation.
-7. history.txt mush be present in the folder while any command is given to store the pastevents.
-8. I am assuming that the pastevents execute command does not give argument greater than 9
-9. I am assuming that that the oldest argument is not being given as input when history is of length less than 15
-10. A history.txt file has already been created.
-11. For specification 6 the proceses run in foreground and background as required but the status of background process is not being printed after the next input is entered.
-12. Some of the part of seek command is left which will be completed by the end of project.
-13. There might be some printf statements between the code which by mistake might  not be commented.However
-it doesen't affect the flow of code.
-14. It might be possible that few commands or flags might not work but i will ensure that it would work by
-the end of the project.
-
----
-
-- Owner: Shivam Mittal
-  (IIIT-HYDERABAD)
-- Made under the valuable guidance of TA's and respected Professor: Mr. Karthik Vaidhyanathan.
+Made under the valuable guidance of TA's and respected Professor: [Mr. Karthik Vaidhyanathan](https://karthikvaidhyanathan.com/).

@@ -138,13 +138,13 @@ void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numproces
             setpgid(0,0);
             // cmd[0]=str;
             // cmd[1]=NULL;
-            if(commands[0]=="sed"){
+            // if(commands[0]=="sed"){
 
-            }else{
+            // }else{
                 execvp(commands[0],commands);
                 perror("execvp");
                 exit(EXIT_FAILURE);
-            }
+            // }
     }
     else if(pid>0){
         if(!bg){
@@ -158,6 +158,7 @@ void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numproces
             strcpy(procarr[(*numprocessact)].procid,tempid);
             (*numprocessact)++;
             while(1){
+                
                 int status2;
                 int rr=waitpid(pid,&status2,WUNTRACED);
                 if(WIFSTOPPED(status2)){
@@ -166,7 +167,6 @@ void executeprocess(char* str,int bg,struct allprocesses* procarr,int* numproces
                     strcpy(procarract[(*numprocessact)].procname,str);
                     strcpy(procarr[(*numprocess)].procid,tempid);
                     strcpy(procarract[(*numprocessact)].procid,tempid);
-
                     (*numprocess)++;
                     (*numprocessact)++;
                     break;
