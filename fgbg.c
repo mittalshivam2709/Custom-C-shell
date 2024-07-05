@@ -2,6 +2,7 @@
 
 void fgbg(char* str,struct allprocesses* procarr,int* numprocess){
     // printf("yo");
+
     char* commands[1024];
     char newstr[1024];
     strcpy(newstr,str);
@@ -12,8 +13,10 @@ void fgbg(char* str,struct allprocesses* procarr,int* numprocess){
         k++;
         token=strtok(NULL," \t");
     }
-    // int pid=atoi(commands[1]);
-    // printf("%d\n",pid);    
+    if(k!=2){
+        printf("Invalid number of arguments\n");
+        return;
+    }
     if(strstr(str,"bg")){
         int flag=0;
         for (int i = 0; i < *numprocess; i++){
@@ -38,6 +41,7 @@ void fgbg(char* str,struct allprocesses* procarr,int* numprocess){
                     printf("No such Process found\n");
                     return;
                 }
+
                 int status;
                 waitpid(pid,&status,0);
             }

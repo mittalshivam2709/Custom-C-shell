@@ -40,10 +40,16 @@ void neonate(char* str){
         k++;
         token=strtok(NULL," \t");
     }
+    if(k!=3){
+        printf("Invalid number of arguments\n");
+        return;
+    }
     int val=atoi(commands[2]);
     enableRawMode();
     setbuf(stdout, NULL);   
     int pid=fork();
+
+    // child process prints the pid of the newly created process until the parent process kills it
     if(pid==0){
         while(1){
             FILE* fp=fopen("/proc/sys/kernel/ns_last_pid","r");
@@ -53,28 +59,17 @@ void neonate(char* str){
             sleep(val);
         }
     }
+
+    // parent process waits for the user to press x and then kills the child process
     else if(pid>0){
         char c;
-        // while (1) {
-            setbuf(stdout, NULL);
-            // int pt = 0;
-            // int flag=0;
-            while (read(STDIN_FILENO, &c, 1) == 1) {
-                if(c=='x'){
-                    // printf("x is preseed");
-                    // flag=1;
-                    kill(pid,9);
-                    disableRawMode();
-                    return;
-                    // printf("Here");
-                    break;
-                }
+        setbuf(stdout, NULL);
+        while (read(STDIN_FILENO, &c, 1) == 1) {
+            if(c=='x'){
+                kill(pid,9);
+                disableRawMode();
+                return;
             }
-            // if(flag){
-            //     // printf("yoyo");
-            //     break;
-            // }
-            // printf("\nInput Read: [%s]\n", inp);
-        // }        
+        }
     }
 }

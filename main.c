@@ -8,6 +8,8 @@
 int fgpid;
 char prompthomedir[1024];
 
+
+// for ctrl c
 void sigint_handler(int sig) {
     if (fgpid != 0) {
         kill(fgpid, SIGINT);
@@ -24,7 +26,6 @@ void sigtstp_handler(int sig) {
         // printf("\n");
     }
 }
-int ctrlzflag=0;
 
 char path[1024];
 int main() {                        
@@ -48,7 +49,6 @@ int main() {
     
     while (1) {
         // call prompt as required
-        ctrlzflag=0;
         if(i==0){
             prompt(1,prompthomedir);
         }
@@ -64,6 +64,7 @@ int main() {
         char* check=fgets(input, sizeof(input), stdin);
 
 
+
         // following is for CTRL D
         if(check==NULL){
             kill(0,SIGTERM);
@@ -71,11 +72,12 @@ int main() {
             break;
         }
 
-        if(strcmp(check,"26")==0){
-            if(ctrlzflag==1){
-                continue;
-            }
-        }
+
+        // if(strcmp(check,"26")==0){
+        //     if(ctrlzflag==1){
+        //         continue;
+        //     }
+        // }
         
         for (int check = 0; check < numprocess; check++){
 

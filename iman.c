@@ -77,52 +77,6 @@ void printmanpage(char* str){
     int flag=0;
     while (n > 0) {
         response[n] = '\0';
-        // int i=-1;    
-        // char ch;
-        // int flag=0;
-        // while(i!=n){
-        //     ch=response[++i];
-        //     int idx=0;
-        //     char line[1024];
-        //     while(ch!='\n'){
-        //         line[idx++]=response[i];
-        //         ch=response[++i];
-        //     }
-        //     line[idx]='\0';
-        //     int store=idx;
-        //     if(flag==0){
-        //         if(strstr(line,"NAME")){
-        //             flag=1;
-        //             idx=-1;
-        //             while(idx!=store){
-        //                 ch=line[++idx];
-        //                 while(ch!='<'){
-        //                     printf("%c",ch);
-        //                     ch=line[++idx];
-        //                 }
-        //                 while(ch!='>'){
-        //                     ch=line[++idx];
-        //                 }
-        //             }
-        //         }
-        //         else{
-        //             printf("here\n");
-        //             continue;
-        //         }
-        //     }
-        //     else{
-        //         idx=0;
-        //         while(idx!=store){
-        //             while(ch!='<'){
-        //                 printf("%c",ch);
-        //                 ch=line[++idx];
-        //             }
-        //             while(ch!='>'){
-        //                 ch=line[++idx];
-        //             }
-        //         }
-        //     }
-        // }
         int i=0;
         if(flag==0){
             while(response[i]!='N' ||response[i+1]!='A'||response[i+2]!='M'||response[i+3]!='E'){
@@ -132,24 +86,17 @@ void printmanpage(char* str){
             i--;
         }
         char ch=response[i];
-        // for (int j = 0; j < 1000; j++)
-        // {
-        //     printf("%c",ch);
-        // }
         
         while(i!=n){
             ch=response[++i];
             while(ch!='<'&&i!=n){
                 printf("%c",ch);
-                // ch=line[++idx];
                 ch=response[++i];
             }
             while(ch!='>'&& i!=n){
-                // ch=line[++idx];
                 ch=response[++i];
             }
         }
-        // printf("%s", response);
         n= read(socketfd, response, sizeof(response) - 1);
     }
 

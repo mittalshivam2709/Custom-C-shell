@@ -122,3 +122,53 @@ sleep 10
 activities
 ls
 clear
+activities
+sleep 100 & sleep 200 & sleep 30 &
+activities
+vim &
+activities
+gedit &
+activities
+ls
+sleep 100 &
+activities
+fg 432662
+sleep 100 &
+activities
+ping 433181 19
+activities
+bg 433181
+actvities
+activities
+fg
+	 	 fg 	 	 
+	  	 bg 	 	 
+ 	 	 fg 		 	
+ 	 	fg 	 	
+fg 	 	 12 	 	 14
+sleep 100 &
+sleep 320
+activities
+sleep 10
+activities
+sleep 10
+\
+sleep 10
+activities
+clear
+sleep 10
+sleep 20
+[A[Asleep 10
+activities
+sleep 100 &
+fg 436406
+sleep 10 &
+fg 437034
+clear
+neonate -n 2
+neonate -n
+neonate
+neonate -n
+neonate -n 2
+iMan cd
+iMan ls

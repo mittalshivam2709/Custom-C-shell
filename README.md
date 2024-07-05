@@ -294,129 +294,51 @@ Ctrl - Z: Push the (if any) running foreground process to the background and cha
 
 ---
 
-### 9. Activities - Displays the processes spawned by the shell which are either running or suspended
+### 9. activities - command
 
+Prints a list of all the processes currently running that were spawned by the shell in lexicographic order. This list contains the following information about all the processes :
 
-$ activities
-
-
-- *activities* print a list of all the processes currently running that were spawned by shell in *lexicographic* order.
-- This list will contain the following information about all processes :
-
-  - Command Name
-  - pid
-  - state : running, stopped and finished
-
-- If a process is *finished*, then it will be printed only once.
-
+- Command Name
+- pid
+- state : running or stopped
+```bash
+<JohnDoe@SYS:~> activities
+221 : emacs new.txt - Running
+430 : vim - Stopped
+620 : gedit - Stopped
+```
 ---
 
 
-### 11. fg - Brings the running or stopped process specified by the pid to the foreground
+### 11. fg and bg command
 
+```fg <pid>```
 
-$ fg [pid]
-
+Brings the running or stopped background process with corresponding pid to foreground, handing it the control of terminal.
 
 - The pid can be any of the pids listed using the command activities
 
-### 12. bg - Sends the running or stopped process specified by the pid to the background
+```bg <pid>```
 
-
-$ bg [pid]
-
-
-- The job_number can be any of the pids listed using the command activities
+Changes the state of a stopped background process to running (in the background).
 
 ---
 
-### 13. Neonate - Prints a specific system data periodically for a specified period
+### 13. Neonate command
 
+Command : ```neonate -n [time_arg]```
 
-$ neonate [OPTION] N
+The command prints the Process-ID of the most recently created process on the system and this pid will be printed every [time_arg] seconds until the key ‘x’ is pressed
 
-
-- Here, the [OPTION] must include exactly one instance of
-  - -n followed by a positive integer [N > 0] which specifies the interval for printing the command output
-  - This prints the PID of the most recently created process on the system after every N seconds
-- A keypress of x stops execution of the command
+--- 
 
 ### 14. iMan Command 
 
-iMan <command_name>
+```iMan <command_name>```
+
 <command_name> is the name of the man page that you want to fetch.
 
 This fetches the man page for the given command from http://man.he.net/ and prints an error statement if the page does not exist.
-
-```bash
-
-<JohnDoe@SYS:~> iMan sleep
-NAME="KEYWORDS" CONTENT="sleep">
-
-
-
-sleep
-
-SLEEP(1)                         User Commands                        SLEEP(1)
-
-NAME
-       sleep - delay for a specified amount of time
-
-SYNOPSIS
-       sleep NUMBER[SUFFIX]...
-       sleep OPTION
-
-DESCRIPTION
-       Pause for NUMBER seconds.  SUFFIX may be 's' for seconds (the default),
-       'm' for minutes, 'h' for hours or 'd' for days.  Unlike most  implemen-
-       tations  that require NUMBER be an integer, here NUMBER may be an arbi-
-       trary floating point number.  Given two or more  arguments,  pause  for
-       the amount of time specified by the sum of their values.
-
-       --help display this help and exit
-
-       --version
-              output version information and exit
-
-AUTHOR
-       Written by Jim Meyering and Paul Eggert.
-
-REPORTING BUGS
-       GNU coreutils online help: &lt;https://www.gnu.org/software/coreutils/&gt;
-       Report sleep translation bugs to &lt;https://translationproject.org/team/&gt;
-
-COPYRIGHT
-       Copyright  (C) 2018 Free Software Foundation, Inc.  License GPLv3+: GNU
-       GPL version 3 or later &lt;https://gnu.org/licenses/gpl.html&gt;.
-       This is free software: you are free  to  change  and  redistribute  it.
-       There is NO WARRANTY, to the extent permitted by law.
-
-SEE ALSO
-       sleep(3)
-
-       Full documentation at: &lt;https://www.gnu.org/software/coreutils/sleep&gt;
-       or available locally via: info '(coreutils) sleep invocation'
-
-GNU coreutils 8.30              September 2019                        SLEEP(1)
-
-Man Pages Copyright Respective Owners.  Site Copyright (C) 1994 - 2024
-Hurricane Electric.
-All Rights Reserved.
-
-
-
-
-fetches man pages from the internet using sockets and outputs it to the terminal (stdout) using the website http://man.he.net/ to get the man pages.
-
-
-$ iMan <command_name>
-
-
-- <command_name> is the name of the man page that you want to fetch.
-
-- This will fetch the man page (atleast the name, synopsis and description of the command) for the given command from http://man.he.net/ and will Print an error statement if the page does not exist.
-
-``` 
 
 ## Additional features
 
